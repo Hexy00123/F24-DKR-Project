@@ -1,6 +1,3 @@
-# Dataset artifacts
-data/tox21*
-
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
