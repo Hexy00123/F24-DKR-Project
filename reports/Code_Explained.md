@@ -15,7 +15,7 @@ Imagine you’re reading a sentence. Your understanding of each word relies not 
 Another powerful feature of Transformers is their ability to process all words in a sentence simultaneously rather than one at a time. This parallel processing allows Transformers to capture complex dependencies between words more efficiently, significantly speeding up training and inference compared to traditional sequential models.
 
 In this article, we’ll delve into two main components of the Transformer architecture: **Attention** and **Positional Encoding**.
-![Scaled Dot-Product and Multi-Head Attention](imgs/image.png)
+![Scaled Dot-Product and Multi-Head Attention](static/image.png)
 
 ---
 
@@ -154,7 +154,7 @@ The dot product measures the similarity between the query and each key:
 
 The dot product between 2 vectors returns the angle between the vectors- such that the dot product between vectors with similar directions will be large, and with orthogonal vectors the dot product will be 0.
 
-![Dot Product](imgs/vecs.png)
+![Dot Product](static/vecs.png)
 
 
 ### **Code Reference: Scaled Dot-Product**
@@ -199,7 +199,7 @@ In the code:
 p_attn = F.softmax(scores, dim=-1)
 ```
 
-![Softmax](imgs/softmax.png)
+![Softmax](static/softmax.png)
 
 ---
 
@@ -215,7 +215,7 @@ In the `Attention` class:
 return torch.matmul(p_attn, value), p_attn
 ```
 
-![Weighted sum](imgs/weighted_sum.png)
+![Weighted sum](static/weighted_sum.png)
 
 ---
 
@@ -252,7 +252,7 @@ PE_{(pos, 2i+1)} = \cos\left(\frac{pos}{10000^{\frac{2i}{d_{model}}}}\right)
 
 This helps the model understand the relative distances between words, even in long sequences.
 
-![Positional Encoding](imgs/pe.png)
+![Positional Encoding](static/pe.png)
 
 ---
 
@@ -334,9 +334,9 @@ The ability of GNNs to process and analyze graph-structured data opens up numero
 
 Transformers have revolutionized the handling of sequential data, prompting the question: can they also excel with graph data? This transition from sequential to graph data necessitates certain modifications to the transformer architecture. Let’s explore these adjustments and introduce Graph Transformers.
 
-![Graph Neural Network](imgs/gnn.png)
+![Graph Neural Network](static/gnn.png)
 
-![Graph Transformer](imgs/g_att.png)
+![Graph Transformer](static/g_att.png)
 
 ### Graph Transformer Architecture Overview
 The architecture of a Graph Transformer includes the following components:
@@ -564,9 +564,9 @@ where:
 
 These eigenvalues and eigenvectors reveal key structural properties of the graph.
 
-![Graph](imgs/g.png)
-![D and A Matrices](imgs/da.png)
-![L Matrix](imgs/l.png)
+![Graph](static/g.png)
+![D and A Matrices](static/da.png)
+![L Matrix](static/l.png)
 
 ---
 
