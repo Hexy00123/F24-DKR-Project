@@ -35,6 +35,18 @@ Laplacian eigenvectors solve this by providing a positional encoding tailored to
 
 ---
 
+### A Surprising Connection: Graphs as Sequences
+
+If we take a sentence (or sequence) and represent it as a **graph** where:
+- Each word is a node.
+- Each word is connected to the next (forming a line graph).
+
+Then the **Laplacian eigenvectors** of this graph will encode positions in the same way as sine and cosine positional encoding. This connection bridges the gap between graph theory and NLP, showing that both frameworks aim to encode structural relationships—whether between tokens in a sequence or nodes in a graph.
+
+For more details you can watch "Recipe for a General, Powerful, Scalable Graph Transformer": https://www.youtube.com/watch?v=DiLSCReBaTg&t=440s
+
+---
+
 Understanding Laplacian eigenvectors goes beyond technical definitions — they provide a lens for exploring **how information flows through a graph**. At their core, these eigenvectors allow us to break down complex graph structures into interpretable "building blocks."
 
 ### Interpreting Eigenvalues and Eigenvectors
@@ -88,18 +100,6 @@ plt.show()
 
 **Output:**
 ![ring](static/ring_graph.png)
-
----
-
-### A Surprising Connection: Graphs as Sequences
-
-If we take a sentence (or sequence) and represent it as a **graph** where:
-- Each word is a node.
-- Each word is connected to the next (forming a line graph).
-
-Then the **Laplacian eigenvectors** of this graph will encode positions in the same way as sine and cosine positional encoding. This connection bridges the gap between graph theory and NLP, showing that both frameworks aim to encode structural relationships—whether between tokens in a sequence or nodes in a graph.
-
-For more details you can watch "Recipe for a General, Powerful, Scalable Graph Transformer": https://www.youtube.com/watch?v=DiLSCReBaTg&t=440s
 
 ---
 
