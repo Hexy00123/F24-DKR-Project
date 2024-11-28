@@ -818,9 +818,11 @@ The **Graph Attention Network (GAT)** is a pioneering architecture that incorpor
 ##### Mechanism
 - **Sparse Attention**: Instead of computing attention scores for all pairs of nodes, GATs only compute scores for a node and its **direct neighbors** (nodes connected by an edge).
 - **Feature Aggregation**: Each node aggregates information from its neighbors, weighted by the attention scores. Mathematically:
-  $$
-  h_i' = \sigma \left( \sum_{j \in \mathcal{N}(i)} \alpha_{ij} W h_j \right)
-  $$
+
+$$
+h_i' = \sigma \left( \sum_{j \in \mathcal{N}(i)} \alpha_{ij} W h_j \right)
+$$
+
   - $h_i'$: Updated feature for node $i$
   - $\mathcal{N}(i)$: Set of neighbors for node $i$
   - $\alpha_{ij}$: Attention weight between node $i$ and $j$
