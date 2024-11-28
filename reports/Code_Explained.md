@@ -290,7 +290,7 @@ class PositionwiseFeedForward(nn.Module):
 Although the positional encoding isn't explicitly implemented here as sine/cosine functions, the feed-forward network processes these embeddings as input. Positional embeddings are typically pre-computed and added to input embeddings before the first layer of the Transformer model.
 
 1. **Continuous Binary Encoding**:
-   - $ \sin $ and $ \cos $ functions encode the position of words in a sequence with continuous values.
+   - $\sin$ and $\cos$ functions encode the position of words in a sequence with continuous values.
    - For even indices ($2i$), the sine function is used, while for odd indices ($2i+1$), the cosine function is used.
    - These functions allow the model to distinguish positional information using a range of frequencies.
 
