@@ -75,23 +75,23 @@ class Attention(nn.Module):
 
 The attention mechanism is governed by the following formula:
 
-\[
+$$
 \text{Attention}(Q, K, V) = \text{Softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V
-\]
+$$
 
 In this formula:
 - **Query (Q)**, **Key (K)**, and **Value (V)** are matrices derived from the input data:
-  - **Query (Q)**: Computed as \(Q = XW_Q\).
-  - **Key (K)**: Computed as \(K = XW_K\).
-  - **Value (V)**: Computed as \(V = XW_V\).
+  - **Query (Q)**: Computed as $Q = XW_Q$.
+  - **Key (K)**: Computed as $K = XW_K$.
+  - **Value (V)**: Computed as $V = XW_V$.
 
-The matrices \(W_Q\), \(W_K\), and \(W_V\) are learnable parameters. These steps are implemented as follows:
+The matrices $W_Q$, $W_K$, and $W_V$ are learnable parameters. These steps are implemented as follows:
 
 ---
 
 ## **Relevant Code: Query, Key, Value Projection**
 
-The projections for \(Q\), \(K\), and \(V\) are handled by the `MultiHeadedAttention` class:
+The projections for $Q$, $K$, and $V$ are handled by the `MultiHeadedAttention` class:
 
 ```python
 class MultiHeadedAttention(nn.Module):
@@ -134,7 +134,7 @@ class MultiHeadedAttention(nn.Module):
 
 ### **Explanation of the Code**
 1. **Projections**:
-   - \(Q = XW_Q\), \(K = XW_K\), \(V = XW_V\): Performed by linear layers (`self.linear_layers`) applied to the input.
+   - $Q = XW_Q$, $K = XW_K$, $V = XW_V$: Performed by linear layers (`self.linear_layers`) applied to the input.
    - After projection, the results are reshaped to split across attention heads (`self.h`) and transposed for easier computation.
 2. **Attention**:
    - The `Attention` module (defined previously) computes the attention scores and weighted values.
@@ -148,9 +148,9 @@ class MultiHeadedAttention(nn.Module):
 ### 1. Dot Product
 The dot product measures the similarity between the query and each key:
 
-\[
+$$
 \text{Attention Score} = QK^T
-\]
+$$
 
 The dot product between 2 vectors returns the angle between the vectors- such that the dot product between vectors with similar directions will be large, and with orthogonal vectors the dot product will be 0.
 
@@ -172,13 +172,13 @@ class Attention(nn.Module):
         return torch.matmul(p_attn, value), p_attn
 ```
 Here:
-- `torch.matmul(query, key.transpose(-2, -1))`: Computes \(QK^T\).
+- `torch.matmul(query, key.transpose(-2, -1))`: Computes $QK^T$.
 - `/ math.sqrt(query.size(-1))`: Scales the result.
 
 ---
 
 ### 2. Scaling
-Scaling by \(\sqrt{d_k}\) stabilizes gradients and ensures that softmax operates in a well-behaved range. 
+Scaling by $\sqrt{d_k}$ stabilizes gradients and ensures that softmax operates in a well-behaved range. 
 
 This is achieved in the above `Attention` implementation with:
 ```python
@@ -190,9 +190,9 @@ scores = torch.matmul(query, key.transpose(-2, -1)) / math.sqrt(query.size(-1))
 ### 3. Softmax
 The softmax function normalizes attention scores into probabilities:
 
-\[
+$$
 \text{Weights} = \text{Softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)
-\]
+$$
 
 In the code:
 ```python
@@ -206,9 +206,9 @@ p_attn = F.softmax(scores, dim=-1)
 ### 4. Weighted Sum
 Finally, attention weights are applied to the Value matrix to compute the output:
 
-\[
+$$
 \text{Output} = \text{Weights} \cdot V
-\]
+$$
 
 In the `Attention` class:
 ```python
@@ -220,7 +220,7 @@ return torch.matmul(p_attn, value), p_attn
 ---
 
 ## **Quadratic Complexity**
-The attention mechanism requires \(n \times n\) interactions for a sequence of \(n\) tokens, leading to quadratic complexity.
+The attention mechanism requires $n \times n$ interactions for a sequence of $n$ tokens, leading to quadratic complexity.
 
 ### **Supporting Code**
 In the `MultiHeadedAttention` implementation:
@@ -230,7 +230,7 @@ query, key, value = [
     for layer, x in zip(self.linear_layers, (query, key, value))
 ]
 ```
-This ensures that all \(n \times n\) interactions are computed efficiently in parallel.
+This ensures that all $n \times n$ interactions are computed efficiently in parallel.
 
 
 # 5. Positional Encoding
@@ -243,12 +243,12 @@ Transformers use trigonometric functions to encode the position of a word in the
 
 The encoding for each position is a combination of sine and cosine functions of varying frequencies:
 
-\[
+$$
 PE_{(pos, 2i)} = \sin\left(\frac{pos}{10000^{\frac{2i}{d_{model}}}}\right)
-\]
-\[
+$$
+$$
 PE_{(pos, 2i+1)} = \cos\left(\frac{pos}{10000^{\frac{2i}{d_{model}}}}\right)
-\]
+$$
 
 This helps the model understand the relative distances between words, even in long sequences.
 
@@ -290,8 +290,8 @@ class PositionwiseFeedForward(nn.Module):
 Although the positional encoding isn't explicitly implemented here as sine/cosine functions, the feed-forward network processes these embeddings as input. Positional embeddings are typically pre-computed and added to input embeddings before the first layer of the Transformer model.
 
 1. **Continuous Binary Encoding**:
-   - \( \sin \) and \( \cos \) functions encode the position of words in a sequence with continuous values.
-   - For even indices (\(2i\)), the sine function is used, while for odd indices (\(2i+1\)), the cosine function is used.
+   - $ \sin $ and $ \cos $ functions encode the position of words in a sequence with continuous values.
+   - For even indices ($2i$), the sine function is used, while for odd indices ($2i+1$), the cosine function is used.
    - These functions allow the model to distinguish positional information using a range of frequencies.
 
 2. **Frequency Impact**:
@@ -299,7 +299,7 @@ Although the positional encoding isn't explicitly implemented here as sine/cosin
    - **High Frequencies**: Capture short-range relationships, useful for encoding local context (e.g., adjacent words).
 
 3. **Model Processing**:
-   - After positional encoding vectors are added to the word embeddings, the `PositionwiseFeedForward` module processes the result, applying transformations via learned weights \(W_1\) and \(W_2\).
+   - After positional encoding vectors are added to the word embeddings, the `PositionwiseFeedForward` module processes the result, applying transformations via learned weights $W_1$ and $W_2$.
 
 ---
 
@@ -341,20 +341,20 @@ Transformers have revolutionized the handling of sequential data, prompting the 
 ### Graph Transformer Architecture Overview
 The architecture of a Graph Transformer includes the following components:
 
-1. **Input Graph**: The model takes an input graph with nodes \(\{x_1, x_2, x_3, x_4\}\) and edges representing the relationships between nodes.
+1. **Input Graph**: The model takes an input graph with nodes $\{x_1, x_2, x_3, x_4\}$ and edges representing the relationships between nodes.
 
-2. **Node Features**: Each node \(x_i\) in the graph is initially represented by a feature vector \(X = [x_1, x_2, x_3, x_4]\).
+2. **Node Features**: Each node $x_i$ in the graph is initially represented by a feature vector $X = [x_1, x_2, x_3, x_4]$.
 
 3. **Linear Transformations**:
-   - The node feature matrix \(X\) is multiplied by three learned weight matrices \(W_Q\), \(W_K\), \(W_V\) to produce the **Query (Q)**, **Key (K)**, and **Value (V)** matrices.
+   - The node feature matrix $X$ is multiplied by three learned weight matrices $W_Q$, $W_K$, $W_V$ to produce the **Query (Q)**, **Key (K)**, and **Value (V)** matrices.
 
 4. **Positional Encoding**:
    - Unlike NLP Transformers, where positional encodings capture the position of words in a sequence, **Graph Transformers use positional encodings to capture the structural information of the graph**, providing context about the node’s position within the graph.
 
 5. **Attention Calculation**: The attention scores are computed using the standard attention formula:
-   \[
+   $$
    \text{Attention}(Q, K, V) = \text{Softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V
-   \]
+   $$
 
 6. **Output**: The final node representations can be used for various downstream tasks, such as:
    - **Node classification**
@@ -510,14 +510,14 @@ class MTBlock(nn.Module):
 ### **Explanation of the Code**
 
 1. **Input Transformation**:
-   - The input features (either **nodes** or **edges**) are transformed using a linear layer \(W_i\) and normalized using **LayerNorm** to prepare them for attention.
+   - The input features (either **nodes** or **edges**) are transformed using a linear layer $W_i$ and normalized using **LayerNorm** to prepare them for attention.
    - This ensures compatibility with the hidden size of the model.
 
 2. **Multi-Head Attention**:
    - **Queries**, **Keys**, and **Values** are computed from the input graph data. These components are processed using the `MultiHeadedAttention` module to capture relationships between nodes or edges in the graph.
 
 3. **Output Transformation**:
-   - The outputs from the attention mechanism are concatenated and passed through a linear transformation \(W_o\) to generate the final embeddings.
+   - The outputs from the attention mechanism are concatenated and passed through a linear transformation $W_o$ to generate the final embeddings.
 
 4. **Residual Connection**:
    - If enabled, the residual connection adds the input features back to the transformed output for better gradient flow and representation learning.
@@ -544,23 +544,23 @@ While many components remain similar, **positional encoding** requires adaptatio
 
 The **Laplacian matrix (L)** is significant as it encodes the graph’s structure. It is defined as:
 
-\[
+$$
 L = D - A
-\]
+$$
 
 where:
-- \(D\) is the **degree matrix** (a diagonal matrix with node degrees).
-- \(A\) is the **adjacency matrix** of the graph.
+- $D$ is the **degree matrix** (a diagonal matrix with node degrees).
+- $A$ is the **adjacency matrix** of the graph.
 
-The Laplacian matrix is **positive semi-definite**, meaning all its eigenvalues are non-negative (\(\lambda \geq 0\)). The eigenvectors of \(L\) satisfy the equation:
+The Laplacian matrix is **positive semi-definite**, meaning all its eigenvalues are non-negative ($\lambda \geq 0$). The eigenvectors of $L$ satisfy the equation:
 
-\[
+$$
 L u = \lambda u
-\]
+$$
 
 where:
-- \(u\) is an eigenvector of \(L\).
-- \(\lambda\) is the corresponding eigenvalue.
+- $u$ is an eigenvector of $L$.
+- $\lambda$ is the corresponding eigenvalue.
 
 These eigenvalues and eigenvectors reveal key structural properties of the graph.
 
@@ -619,11 +619,11 @@ def compute_laplacian_eigenvectors(adj_matrix, num_eigenvectors=10):
 ### **Explanation of the Code**
 
 1. **Adjacency and Degree Matrices**:
-   - The adjacency matrix (\(A\)) encodes connections between nodes.
-   - The degree matrix (\(D\)) is computed as the sum of adjacency weights for each node.
+   - The adjacency matrix ($A$) encodes connections between nodes.
+   - The degree matrix ($D$) is computed as the sum of adjacency weights for each node.
 
 2. **Laplacian Matrix**:
-   - The Laplacian matrix is computed as \(L = D - A\).
+   - The Laplacian matrix is computed as $L = D - A$.
 
 3. **Eigenvalue Decomposition**:
    - The smallest eigenvalues and their corresponding eigenvectors are computed using `eigsh`, capturing low-frequency (global) structural components of the graph.
