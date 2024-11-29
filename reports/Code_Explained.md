@@ -910,3 +910,86 @@ Graph Transformers hold immense potential for applications across domains, from 
 - **Subgraph-based architectures**,
 
 we can design models that retain the expressive power of Transformers while scaling to real-world graph sizes.
+
+# 9. Applying Graph Transformers to the Tox21 Dataset
+
+#### Objective
+The goal of this project was to apply **Graph Transformers (GTNs)** to predict molecular toxicity in the **Tox21 dataset**, a benchmark dataset for toxicology studies. This dataset consists of molecular SMILES strings annotated with binary toxicity labels across various tasks. By leveraging the expressive power of Graph Transformers, we aimed to capture both the structural and feature-based intricacies of molecular graphs.
+
+---
+
+#### Dataset Preparation
+The **Tox21 dataset** was loaded and preprocessed to focus on binary toxicity classification. Specifically:
+1. **Data Loading**:
+   - SMILES strings representing molecular structures were read from the dataset.
+   - Toxicity labels were aggregated into a single binary label (`is_toxic`) to denote the overall toxicity of each molecule.
+
+2. **Data Cleaning**:
+   - Missing values were replaced with zeros.
+   - Non-toxic and toxic molecules were balanced in the dataset for robust training.
+
+---
+
+#### Molecular Graph Representation
+Each molecule was represented as a graph, where:
+- **Nodes** correspond to atoms.
+- **Edges** represent chemical bonds.
+
+To generate the graph structure:
+1. **Feature Extraction**:
+   - Atom-level features were generated using **Morgan fingerprints**, a widely-used method in cheminformatics that encodes chemical environments using circular substructures.
+   - Features were stored as binary vectors of length 2048 for each atom.
+
+2. **Graph Topology**:
+   - The **adjacency matrix** was computed from SMILES strings, encoding bond connectivity between atoms.
+   - The **degree matrix** and **Laplacian matrix** were derived to capture additional graph structural properties.
+   - Edge indices were extracted to represent graph edges explicitly.
+
+---
+
+#### Graph Transformer Architecture
+We implemented a **Graph Transformer** that uses the molecular graph as input:
+1. **Feature Embeddings**:
+   - Node embeddings (atom features) and adjacency matrices were passed as input to the Graph Transformer.
+   - The architecture supports adjacency matrices directly, enabling seamless processing of graph-structured data.
+
+2. **Model Components**:
+   - A custom **TransformerClassifier** was developed, combining a Graph Transformer with a feedforward classifier:
+     - **Graph Transformer Layer**: Processes graph data, capturing relationships between atoms and bonds.
+     - **Feedforward Layers**: Maps the graph-level representation to a binary toxicity score.
+
+3. **Optimization**:
+   - The model was trained using the **Binary Cross-Entropy Loss (BCEWithLogitsLoss)**.
+   - The optimizer was Adam with a learning rate of \(1 \times 10^{-5}\).
+
+---
+
+#### Training and Validation
+1. **Training Procedure**:
+   - The dataset was split into training and test sets (90%/10%).
+   - A PyTorch **Dataset** and **Dataloader** were used to preprocess and feed data into the model.
+   - Training was conducted for a single epoch, using node embeddings and adjacency matrices as input.
+
+2. **Validation Metrics**:
+   - During validation, the model achieved a balance between loss minimization and accuracy. Metrics such as **binary accuracy** and **validation loss** were tracked.
+
+---
+
+#### Inference
+The trained model was used to predict the toxicity of new molecules. Given a SMILES string, the process included:
+1. Generating graph embeddings using the **FeatureExtractor**.
+2. Passing the embeddings through the model to compute toxicity probabilities.
+3. Thresholding the output to produce a binary toxicity prediction.
+
+For example, given the SMILES string `"CCO"`, the model predicted a non-toxic outcome (`0`).
+
+---
+
+#### Key Insights
+- The **Graph Transformer** effectively captured the molecular structure and toxicity relationships, leveraging both feature and positional information.
+- The use of graph-based positional encodings (e.g., adjacency and Laplacian matrices) enriched the model's understanding of molecular interactions.
+- The results demonstrate the feasibility of applying Transformer-based architectures to structured data like molecular graphs, bridging the gap between natural language and graph data processing.
+
+This workflow provides a solid foundation for extending Graph Transformers to other cheminformatics and toxicology datasets, unlocking further applications in drug discovery and molecular property prediction.
+
+You can find all relevent code with GTN training and inference [here.](https://github.com/Hexy00123/F24-DKR-Project/blob/main/notebooks/graphormer.ipynb)
