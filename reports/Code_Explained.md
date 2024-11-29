@@ -352,9 +352,10 @@ The architecture of a Graph Transformer includes the following components:
    - Unlike NLP Transformers, where positional encodings capture the position of words in a sequence, **Graph Transformers use positional encodings to capture the structural information of the graph**, providing context about the node’s position within the graph.
 
 5. **Attention Calculation**: The attention scores are computed using the standard attention formula:
-   $$
-   \text{Attention}(Q, K, V) = \text{Softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V
-   $$
+
+$$
+\text{Attention}(Q, K, V) = \text{Softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V
+$$
 
 6. **Output**: The final node representations can be used for various downstream tasks, such as:
    - **Node classification**
